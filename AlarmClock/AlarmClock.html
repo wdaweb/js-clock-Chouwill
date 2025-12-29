@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      /* 主容器 */
+      .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        background: url("./imgs//forest-bg.jpg") no-repeat;
+        background-size: cover;
+      }
+
+      /* 錘子 */
+      .hammer img {
+        width: 250px;
+        height: 250px;
+        transform: rotate(10deg);
+      }
+
+      /* 時鐘主體 */
+      .clock {
+        width: 500px;
+        height: 500px;
+        border-radius: 100%;
+        position: relative;
+        background-image: url("./imgs/clock-bg.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+
+      /* 時鐘數字 */
+      p {
+        color: #000;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform-origin: 0 0;
+        transform: rotate(30deg) translate(100px);
+        font-size: 30px;
+      }
+
+      /* 各數字位置 */
+      .clock p:nth-of-type(1) {
+        transform: rotate(295deg) translate(270px) rotate(-295deg);
+      }
+      .clock p:nth-of-type(2) {
+        transform: rotate(320deg) translate(250px) rotate(-320deg);
+      }
+      .clock p:nth-of-type(3) {
+        transform: rotate(-10deg) translate(230px) rotate(10deg);
+      }
+      .clock p:nth-of-type(4) {
+        transform: rotate(20deg) translate(210px) rotate(-20deg);
+      }
+      .clock p:nth-of-type(5) {
+        transform: rotate(50deg) translate(185px) rotate(-50deg);
+      }
+      .clock p:nth-of-type(6) {
+        transform: rotate(90deg) translate(180px) rotate(-90deg);
+      }
+      .clock p:nth-of-type(7) {
+        transform: rotate(130deg) translate(190px) rotate(-130deg);
+      }
+      .clock p:nth-of-type(8) {
+        transform: rotate(160deg) translate(210px) rotate(-160deg);
+      }
+      .clock p:nth-of-type(9) {
+        transform: rotate(190deg) translate(235px) rotate(-190deg);
+      }
+      .clock p:nth-of-type(10) {
+        transform: rotate(220deg) translate(255px) rotate(-220deg);
+      }
+      .clock p:nth-of-type(11) {
+        transform: rotate(245deg) translate(275px) rotate(-245deg);
+      }
+      .clock p:nth-of-type(12) {
+        transform: rotate(270deg) translate(285px) rotate(-270deg);
+        font-size: 40px;
+      }
+
+      /* 時鐘中心點 */
+      .circle {
+        width: 20px;
+        height: 20px;
+        background-color: #000;
+        border-radius: 50%;
+        position: absolute;
+        top: 246px;
+        left: 244px;
+      }
+
+      /* 指針共用樣式 */
+      .minute-line,
+      .hour-line,
+      .second-line {
+        height: 3px;
+        border-radius: 10px;
+        position: absolute;
+        top: 256px;
+        left: 254px;
+        transform-origin: left center;
+      }
+
+      /* 分針 */
+      .minute-line {
+        width: 170px;
+        background-color: #000;
+      }
+
+      /* 時針 */
+      .hour-line {
+        width: 130px;
+        background-color: #d20d0d;
+      }
+
+      /* 秒針 */
+      .second-line {
+        width: 180px;
+        background-color: green;
+      }
+
+      /* 鬧鐘設定區域 */
+      .set-alarm {
+        margin: 35px 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 4px;
+      }
+
+      /* 熊熊 */
+      .brick img {
+        display: block;
+        width: 250px;
+        height: 250px;
+        transform: scaleX(-1);
+      }
+
+      /* 熊熊左右翻轉 */
+      @keyframes bearFlip {
+        0% {
+          transform: scaleX(1);
+        }
+        100% {
+          transform: scaleX(-1);
+        }
+      }
+
+      .bear {
+        animation: bearFlip 2s infinite alternate;
+      }
+
+      /* 錘子掉落與旋轉 */
+      @keyframes hammer {
+        0% {
+          transform: translateY(-150px) rotate(0deg);
+        }
+        100% {
+          transform: translateY(130vh) rotate(-360deg);
+        }
+      }
+
+      .hammer-img {
+        display: block;
+        animation: hammer 2s linear infinite;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="hammer">
+        <!-- <img class="hammer-img" src="./imgs/hammer.png" alt="" /> -->
+      </div>
+
+      <!-- 時鐘主體 -->
+      <div class="clock">
+        <div class="circle"></div>
+        <div class="hour-line"></div>
+        <div class="minute-line"></div>
+        <div class="second-line"></div>
+      </div>
+
+      <div class="show-now-time">
+        <h2 class="showTimeText"></h2>
+      </div>
+
+      <div class="set-alarm">
+        <label>設定鬧鐘</label>
+        <input type="datetime-local" class="dateTime" />
+        <input type="button" value="設定" class="setButton" />
+      </div>
+
+      <div class="brick">
+        <!-- <img class="bear" src="./imgs/Bear.png" /> -->
+      </div>
+
+      <!-- <button class="bearBtn">切換熊熊顯示狀態</button> -->
+    </div>
+
+    <!-- dayjs -->
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+
+    <script>
+      /* DOM 選取 */
+      const clock = document.querySelector(".clock");
+      const hourLine = document.querySelector(".hour-line");
+      const minuteLine = document.querySelector(".minute-line");
+      const secondLine = document.querySelector(".second-line");
+      const showTimeText = document.querySelector(".showTimeText");
+      const dateTime = document.querySelector(".dateTime");
+      const setButton = document.querySelector(".setButton");
+      const switchBear = document.querySelector(".bearBtn");
+      const Bear = document.querySelector(".bear");
+
+      /* 時間物件 */
+      const getNowTime = {
+        yearNum: dayjs().format("YYYY"),
+        monthNum: dayjs().format("MM"),
+        dateNum: dayjs().format("DD"),
+        hourNum: dayjs().format("HH"),
+        minuteNum: dayjs().format("mm"),
+        secondNum: dayjs().format("ss"),
+      };
+
+      /* 設定 input 預設值 */
+      dateTime.value =
+        `${getNowTime.yearNum}-${getNowTime.monthNum}-${getNowTime.dateNum}` +
+        `T${getNowTime.hourNum}:${getNowTime.minuteNum}`;
+
+      /* 動態產生時鐘數字（可啟用） */
+      for (let i = 1; i <= 12; i++) {
+        const clockNum = document.createElement("p");
+        clockNum.innerText = i;
+        // clock.appendChild(clockNum);
+      }
+
+      /* 鬧鐘檢查 */
+      function checkAlarm() {
+        let getSetTime = localStorage.getItem("setTime");
+        if (!getSetTime) return;
+
+        const arr = getSetTime.split("-");
+        const [year, month, dayTime] = arr;
+        const [day, time] = dayTime.trim().split("T");
+        const [hour, minute] = time.split(":");
+
+        if (
+          getNowTime.yearNum == year &&
+          getNowTime.monthNum == month &&
+          getNowTime.dateNum == day &&
+          getNowTime.hourNum == hour &&
+          getNowTime.minuteNum == minute
+        ) {
+          alert("鬧鐘該響了");
+          localStorage.clear();
+        }
+      }
+
+      /* 儲存鬧鐘 */
+      setButton.addEventListener("click", () => {
+        localStorage.setItem("setTime", dateTime.value);
+      });
+
+      /* 熊熊翻轉示範 */
+      setInterval(() => {
+        Bear.style.display = "block";
+        Bear.style.transform = "scaleX(1)";
+      }, 2000);
+
+      /* 時鐘指針更新 */
+      setInterval(() => {
+        const hourNum = dayjs().format("hh");
+        const minuteNum = dayjs().format("mm");
+        const secondNum = dayjs().format("ss");
+
+        hourLine.style.transform = `rotate(${hourNum * 30 - 90}deg)`;
+        minuteLine.style.transform = `rotate(${minuteNum * 6 - 90}deg)`;
+        secondLine.style.transform = `rotate(${secondNum * 6 - 90}deg)`;
+      }, 1000);
+
+      /* 更新時間與檢查鬧鐘 */
+      setInterval(() => {
+        getNowTime.yearNum = dayjs().format("YYYY");
+        getNowTime.monthNum = dayjs().format("MM");
+        getNowTime.dateNum = dayjs().format("DD");
+        getNowTime.hourNum = dayjs().format("HH");
+        getNowTime.minuteNum = dayjs().format("mm");
+        getNowTime.secondNum = dayjs().format("ss");
+
+        checkAlarm();
+
+        showTimeText.innerHTML =
+          `${getNowTime.yearNum}年${getNowTime.monthNum}月${getNowTime.dateNum}日 ` +
+          `${getNowTime.hourNum}: ${getNowTime.minuteNum} : ${getNowTime.secondNum}`;
+      }, 1000);
+    </script>
+  </body>
+</html>
